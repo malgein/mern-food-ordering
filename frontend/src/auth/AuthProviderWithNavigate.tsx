@@ -8,30 +8,32 @@ type Props = {
 };
 
 const Auth0ProviderWithNavigate = ({ children }: Props) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const {createUser } = useCreateMyUser()
 
   const domain = import.meta.env.VITE_AUTH0_DOMAIN;
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
-  // const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
+  // Termina de conectar auth0 con el frontend
+  const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
-  if (!domain || !clientId || !redirectUri) {
+  // 
+  if (!domain || !clientId || !redirectUri || ! audience) {
     throw new Error("unable to initialise auth");
   }
 
-  const onRedirectCallback = (appState?: AppState, user?: User) => {
-    // navigate(appState?.returnTo || "/auth-callback");
+  const onRedirectCallback = (appState?: AppState, user?: User) => { 
     // podemos ver la info del usuario que logea
-    if(user?.sub && user?.email){
+    // if(user?.sub && user?.email){
 
-      //*IMPORTANTE *
-      // Aqui si logeamos con auth0 usando google podemos crear a traves de la funcion createUser el usuario de google en nuestra base de datos en mongo
-      createUser({auth0Id : user.sub, email: user.email})
-    }
+    //   //*IMPORTANTE *
+    //   // Aqui si logeamos con auth0 usando google podemos crear a traves de la funcion createUser el usuario de google en nuestra base de datos en mongo
+    //   createUser({auth0Id : user.sub, email: user.email})
+    // }
+    navigate("/auth-callback");
 
-    console.log("USER", user)
+    // console.log("USER", user)
   };
 
   return (
@@ -40,7 +42,7 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
       clientId={clientId}
       authorizationParams={{
         redirect_uri: redirectUri,
-        // audience,
+         audience,
       }}
       onRedirectCallback={onRedirectCallback}
     >
@@ -50,3 +52,5 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
 };
 
 export default Auth0ProviderWithNavigate;
+
+//! minuto 2:38 
