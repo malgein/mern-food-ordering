@@ -24,8 +24,10 @@ export const useCreateMyUser = () => {
     const accessToken = await getAccessTokenSilently();
     // Llamada a nuestra API en en backend que crea nuevos usuarios
     const response = await fetch(`${API_BASE_URL}/api/my/user`, {
+      // request tipo post
       method: "POST",
       headers: {
+        // Utilizamos el token
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
@@ -50,4 +52,60 @@ export const useCreateMyUser = () => {
     isError,
     isSuccess,
   };
+};
+
+// Es una tabla de tipado typescript para formData que sera la ifnormacion que llega en forma de objeto del formulario para editar la informacion del usuario
+type UpdateMyUserRequest = {
+  name: string;
+  addressLine1: string;
+  city: string;
+  country: string;
+};
+
+// funcion que va a hacer los llamados al backend para asi modificar la informacion del usuario
+export const useUpdateMyUser = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  // formData es la informacion que viene del formulaario de profilepage donde se edita la informacion del usuario
+  const updateMyUserRequest = async (formData: UpdateMyUserRequest) => {
+    const accessToken = await getAccessTokenSilently();
+
+    // Llamada a nuestra API en en backend que modifica usuarios
+    const response = await fetch(`${API_BASE_URL}/api/my/user`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      // convertimos en formato JSON la informacion
+      body: JSON.stringify(formData),
+    });
+
+    // si la respuesta no es exitosa enviamos un mensaje de error
+    if (!response.ok) {
+      throw new Error("Failed to update user");
+    }
+
+    // Enviamos la respuesta en formato JSOn
+    return response.json();
+  };
+
+  const {
+    mutateAsync: updateUser,
+    isLoading,
+    isSuccess,
+    error,
+    reset,
+  } = useMutation(updateMyUserRequest);
+
+  if (isSuccess) {
+    // toast.success("User profile updated!");
+  }
+
+  if (error) {
+    // toast.error(error.toString());
+    reset();
+  }
+
+  return { updateUser, isLoading };
 };

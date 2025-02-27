@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 // atributo typescript que usamos para nombrar cada casilla de input para modificar atributos del usuario ej name, citiy, addres , etc, permite recordarnos el nombre de cada formField (input de nuestra seccion de modificacion de datos del usuario)
 const formSchema = z.object({
     email: z.string().optional(),
+    // Al aplicar el atributo min nos aseguramos de que dicha propiedad sea requerida para el input correspondiente
     name: z.string().min(1, "name is required"),
     addressLine1: z.string().min(1, "Address Line 1 is required"),
     city: z.string().min(1, "City is required"),
