@@ -7,6 +7,9 @@
 import { useMutation } from "react-query";
 // Importamos auth0 la api que usamos para autenticar con terceros
 import { useAuth0 } from "@auth0/auth0-react";
+// PAquete para bonitas notificaciones
+import { toast } from "sonner";
+
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -98,12 +101,15 @@ export const useUpdateMyUser = () => {
     reset,
   } = useMutation(updateMyUserRequest);
 
+  // Si la peticion para modificar el usurio tuvo exito imprime un mensaje de exito
   if (isSuccess) {
-    // toast.success("User profile updated!");
+    toast.success("User profile updated!");
   }
 
+  // Si no tuvo exito dicha peticion imprime un mensaje de error con el mensaje devuelto
   if (error) {
-    // toast.error(error.toString());
+    toast.error(error.toString());
+    // Limpia el estado de error de la peticion
     reset();
   }
 
