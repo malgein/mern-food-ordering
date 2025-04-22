@@ -3,6 +3,7 @@ import Layout from "./layouts/layout";
 import HomePage from "./pages/HomePage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 const AppRoutes = () => {
     return (
@@ -12,12 +13,16 @@ const AppRoutes = () => {
         */}
 				<Route path="/" element={<Layout showHero>{<HomePage/>}</Layout>} />
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
-				<Route path="/user-profile" element={
-          // User profilepage se refiere a la pagina que muestra el formulario para modificar informacion del usuario
-          <Layout>
-            <UserProfilePage />
-          </Layout>
-        } />
+				
+        {/* Ruta protegida  */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/user-profile" element={
+            // User profilepage se refiere a la pagina que muestra el formulario para modificar informacion del usuario
+            <Layout>
+              <UserProfilePage />
+            </Layout>
+          } />
+        </Route>
 				<Route path="*" element={<Navigate to="/" />} />
       </Routes>
     );

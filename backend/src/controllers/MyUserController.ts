@@ -2,18 +2,21 @@ import { Request, Response } from "express";
 // modelo de usuario en la DB
 import User from "../models/user";
 
+// controlador para obtener el usuario actual, que esta logeado
 const getCurrentUser = async (req: Request, res: Response) => {
-  // try {
-  //   const currentUser = await User.findOne({ _id: req.userId });
-  //   if (!currentUser) {
-  //     return res.status(404).json({ message: "User not found" });
-  //   }
-
-  //   res.json(currentUser);
-  // } catch (error) {
-  //   console.log(error);
-  //   return res.status(500).json({ message: "Something went wrong" });
-  // }
+  try {
+    // guardamos en una variable el usuario de la bd que coincida con el id del usurio que estamos buscando 
+    const currentUser = await User.findOne({ _id: req.userId });
+    // si el usuario existe, lo devolvemos en la respuesta correspondiente
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+// Si existeel usuario simplemente lo devolvemos
+    res.json(currentUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 };
 
 // Controlador que busca el usuario mediante la autenticacion de terceros, si existe en la DB lo devuelve , si no lo crea nuevo
@@ -77,4 +80,3 @@ export default {
   updateCurrentUser
 };
 
-// ! MInuto 3:27

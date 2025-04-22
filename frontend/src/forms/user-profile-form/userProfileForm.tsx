@@ -1,5 +1,6 @@
 // Archivo que consiste en la seccion  de modificacion del usuario perse   
 // Archivo de validaciones para nuestro formulario en el frontend de usuarios
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/LoadingButton";
 // Componente button de shadcn de boton
 import { Button } from "@/components/ui/button";
+import { User } from "@/types";
+import { useEffect } from "react";
 
 // atributo typescript que usamos para nombrar cada casilla de input para modificar atributos del usuario ej name, citiy, addres , etc, permite recordarnos el nombre de cada formField (input de nuestra seccion de modificacion de datos del usuario)
 const formSchema = z.object({
@@ -25,7 +28,7 @@ const formSchema = z.object({
   export type UserFormData = z.infer<typeof formSchema>;
   
   type Props = {
-    // currentUser: User;
+    currentUser: User;
     onSave: (userProfileData: UserFormData) => void;
     isLoading: boolean;
     // title?: string;
@@ -34,11 +37,17 @@ const formSchema = z.object({
 
   // Componente padre como tal que encierra toda la seccion de form
   const UserProfileForm = ({
-    onSave, isLoading }: Props) => {
+    onSave, isLoading, currentUser }: Props) => {
       const form = useForm<UserFormData>({
         resolver: zodResolver(formSchema),
-        // defaultValues: currentUser,
+        // propiedad de valores por defecto se le pasa la informacion del usuario actual por defecto
+        defaultValues: currentUser,
       });
+
+      // Hace que apenas se inicie el formulario en dichos campos de input se agrege la informacion del usuario actual
+      useEffect(() => {
+        form.reset(currentUser);
+      }, [currentUser, form]);    
 
     return (
       // COmponente Form traido de shadcn

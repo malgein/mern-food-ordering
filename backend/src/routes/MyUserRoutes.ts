@@ -11,6 +11,8 @@ import { validateMyUserRequest } from "../middleware/validations";
 const router = express.Router();
 
 // /api/my/user
+// AQui usuamos cmo middleware a auth0 a traves de jwtCheck, y mediante getCurrentUser obtenemos informacion del usuario en cuestion aquel que esta logeado 
+router.get("/", jwtCheck, jwtParse, MyUserController.getCurrentUser);
 
 // AQui usuamos cmo middleware a auth0 a traves de jwtCheck,  tambien colocamos el controlador creacteCurrentUser en la ruta principal para crear usuarios
 router.post("/", jwtCheck,  MyUserController.createCurrentUser);

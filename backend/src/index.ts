@@ -5,9 +5,18 @@ import "dotenv/config";
 import mongoose from "mongoose";
 // Importamos el sistema de rutas
 import myUserRoute from "./routes/MyUserRoutes";
+// Dependencia para el almacenamiento de archivos tipo imagenes
+import { v2 as cloudinary } from "cloudinary";
 
 // Hacemos la conexion con la BD
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => console.log("Connected to database!"));
+
+// Configuramos el cloudinary para su uso
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
 
 const app = express();

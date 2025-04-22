@@ -4,11 +4,13 @@
 // Archivo que permite la creacion del usuario mediante autenticacion de terceros y al mismo tiempo crea el usuario en la BD
 
 // Importamos React query
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 // Importamos auth0 la api que usamos para autenticar con terceros
 import { useAuth0 } from "@auth0/auth0-react";
 // PAquete para bonitas notificaciones
 import { toast } from "sonner";
+// Tipado de objeto
+import { User } from "@/types";
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -19,6 +21,40 @@ type CreateUserRequest = {
   email: string; 
 };
 
+
+export const useGetMyUser = () => { 
+  const { getAccessTokenSilently } = useAuth0();
+
+  const getMyUserRequest = async (): Promise<User> => {
+    const accessToken = await getAccessTokenSilently();
+
+    const response = await fetch(`${API_BASE_URL}/api/my/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user");
+    }
+
+    return response.json();
+  };
+
+  const {
+    data: currentUser,
+    isLoading,
+    error,
+  } = useQuery("fetchCurrentUser", getMyUserRequest);
+
+  if (error) {
+    toast.error(error.toString());
+  }
+
+  return { currentUser, isLoading };
+};
 
 export const useCreateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
