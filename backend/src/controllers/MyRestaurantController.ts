@@ -1,0 +1,57 @@
+import { Request, Response } from "express";
+// Modelo del restaurant
+import Restaurant from "../models/restaurant";
+// Importamos cloudinary para el almacenamiento de imagnes de restaurant
+import cloudinary from "cloudinary";
+import mongoose from "mongoose";
+// import Order from "../models/order";
+
+// funcion que permite subir imagenes a cloudinary a traves de multer y express js
+const uploadImage = async (file: Express.Multer.File) => {
+  const image = file;
+  const base64Image = Buffer.from(image.buffer).toString("base64");
+  const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+
+  const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+  return uploadResponse.url;
+};
+
+// controlador que maneja la logica de creacion de restaurantes por usuario
+const createMyRestaurant = async (req: Request, res: Response) => {
+    try {
+			// Verificamos que exista una restaurante creado por el usuario en cuestion
+      const existingRestaurant = await Restaurant.findOne({ user: req.userId });
+  
+			// Si existe un restaurante creado por el usuaio enviamos un mensaje de ya existe uno creado con este usuario, solo podemos crear un restaurante por usuario usando esta app
+      if (existingRestaurant) {
+        return res
+				// codigo 409 implica duplicado
+          .status(409)
+          .json({ message: "User restaurant already exists" });
+      }
+			// el url de la imagen del restaurante sera obtenida mediante la funcion siguiente y la guardamos en la var imageUrl
+      const imageUrl = await uploadImage(req.file as Express.Multer.File);
+  
+			// creamos un nuveo restaurant en  la BD  en la tabla Restaurant
+      const restaurant = new Restaurant(req.body);
+			// Establecemos como propiedad  imageUrl del restaurante creado el valor de imageUrl que seria la url del restaurante gurdada en cloudinary
+      restaurant.imageUrl = imageUrl;
+      restaurant.user = new mongoose.Types.ObjectId(req.userId);
+      restaurant.lastUpdated = new Date();
+      await restaurant.save();
+  
+      res.status(201).send(restaurant);
+			// Si algo sale mal a nivel de servidor informamos el error
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  };
+
+	export default {
+		// updateOrderStatus,
+		// getMyRestaurantOrders,
+		// getMyRestaurant,
+		createMyRestaurant,
+		// updateMyRestaurant,
+	};
