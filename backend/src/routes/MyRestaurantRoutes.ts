@@ -24,7 +24,9 @@ router.post(
 	// Para almacenar las images con cloudinary
   upload.single("imageFile"),
   // validateMyRestaurantRequest,
-  jwtCheck,
-  jwtParse,
+  // jwtCheck,
+  // jwtParse,
   MyRestaurantController.createMyRestaurant
 );
+
+export default router;

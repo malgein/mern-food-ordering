@@ -32,14 +32,17 @@ const createMyRestaurant = async (req: Request, res: Response) => {
 			// el url de la imagen del restaurante sera obtenida mediante la funcion siguiente y la guardamos en la var imageUrl
       const imageUrl = await uploadImage(req.file as Express.Multer.File);
   
-			// creamos un nuveo restaurant en  la BD  en la tabla Restaurant
+			// creamos un nuevo restaurant en  la BD  en la tabla Restaurant
       const restaurant = new Restaurant(req.body);
 			// Establecemos como propiedad  imageUrl del restaurante creado el valor de imageUrl que seria la url del restaurante gurdada en cloudinary
       restaurant.imageUrl = imageUrl;
+      // Estblecemos la propiedad de usuario del modelo restaurant en el id del usuario que esta creeando el restaurant relacionando el usuario con el restaurante creado
       restaurant.user = new mongoose.Types.ObjectId(req.userId);
+      // modificamos la propiedad lastUpdate de restaurant con la fecha actual para dejar un registro en la DB
       restaurant.lastUpdated = new Date();
+      // guardamos finalmente el restauramte creado en la DB
       await restaurant.save();
-  
+      // Tambien al final devolvemos el restaurante creado
       res.status(201).send(restaurant);
 			// Si algo sale mal a nivel de servidor informamos el error
     } catch (error) {

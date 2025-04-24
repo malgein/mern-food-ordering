@@ -5,6 +5,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 // Importamos el sistema de rutas
 import myUserRoute from "./routes/MyUserRoutes";
+import myRestaurantRoute from "./routes/MyRestaurantRoutes"
 // Dependencia para el almacenamiento de archivos tipo imagenes
 import { v2 as cloudinary } from "cloudinary";
 
@@ -30,8 +31,12 @@ app.get("/test", async (req: Request, res: Response) => {
     res.json({message: "hello!"})
 })
 
-// Ruta de inicio para acciones que tengan que ver con os usuarios
+// Ruta de inicio para acciones que tengan que ver con los usuarios
 app.use("/api/my/user", myUserRoute);
+
+// Ruta del servidor que lleva a cabo acciones en relacion con los restaurantes 
+app.use("/api/my/restaurant", myRestaurantRoute);
+
 
 // Prendemos el servidor como tal
 app.listen(7000, () => {
