@@ -5,6 +5,8 @@ import multer from "multer";
 import MyRestaurantController from "../controllers/MyRestaurantController";
 // Validaciones correspondientes
 import { jwtCheck, jwtParse } from "../middleware/auth";
+// validaciones correspondientes para la creacion de restauramtes
+import { validateMyRestaurantRequest } from "../middleware/validations";
 
 
 const router = express.Router();
@@ -23,9 +25,11 @@ router.post(
   "/",
 	// Para almacenar las images con cloudinary
   upload.single("imageFile"),
-  // validateMyRestaurantRequest,
-  // jwtCheck,
-  // jwtParse,
+// validaciones correspondientes para la creacion de restaurantes 
+  validateMyRestaurantRequest,
+  // Nos aseguramos de que el usuario se encuentre autenticado
+  jwtCheck,
+  jwtParse,
   MyRestaurantController.createMyRestaurant
 );
 
