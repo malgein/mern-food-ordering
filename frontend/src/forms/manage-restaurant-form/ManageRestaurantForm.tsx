@@ -9,6 +9,8 @@ import { Restaurant } from "@/types";
 import DetailsSection from "./DetailsSection";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@radix-ui/react-separator";
+import CuisinesSection from "./CuisinesSection";
+import MenuSection from "./MenuSection";
 
 // Este esquema asegura que:Algunos campos (nombre del restaurante, ciudad, país, etc.) sean requeridos.
 const formSchema = z
@@ -81,10 +83,10 @@ const formSchema = z
       >
         <DetailsSection />
         <Separator />
-        {/* <CuisinesSection />
+        <CuisinesSection />
         <Separator />
         <MenuSection />
-        <Separator />
+        {/* <Separator />
         <ImageSection /> */}
         {/* {isLoading ? <LoadingButton /> : <Button type="submit">Submit</Button>} */}
       </form>
