@@ -8,15 +8,19 @@ import { Restaurant } from "@/types";
 // seccion del formulario
 import DetailsSection from "./DetailsSection";
 import { Form } from "@/components/ui/form";
+import LoadingButton from "@/components/LoadingButton";
 import { Separator } from "@radix-ui/react-separator";
 import CuisinesSection from "./CuisinesSection";
 import MenuSection from "./MenuSection";
+
+import ImageSection from "./ImageSection";
+import { Button } from "@/components/ui/button";
 
 // Este esquema asegura que:Algunos campos (nombre del restaurante, ciudad, país, etc.) sean requeridos.
 const formSchema = z
   .object({
     restaurantName: z.string({
-      required_error: "restuarant name is required",
+      required_error: "restaurant name is required",
     }),
     city: z.string({
       required_error: "city is required",
@@ -63,7 +67,7 @@ const formSchema = z
     isLoading: boolean;
   };
   
-  const ManageRestaurantForm = () => {
+  const ManageRestaurantForm = ({ onSave, isLoading, restaurant  } : Props) => {
     // Se inicializa el formulario con react-hook-form
     const form = useForm<RestaurantFormData>({
       // usando zodResolver para validar con el esquema de Zod.
@@ -75,10 +79,48 @@ const formSchema = z
       },
     });
 
+    // funcion que envia la informacion registrada en el formulario
+    const onSubmit = (formDataJson: RestaurantFormData) => {
+      // Se crea un objeto FormData, útil para enviar datos con archivos.
+      const formData = new FormData();
+  
+      formData.append("restaurantName", formDataJson.restaurantName);
+      formData.append("city", formDataJson.city);
+      formData.append("country", formDataJson.country);
+  
+      // Se transforman valores numéricos a centavos (multiplicando por 100).
+      formData.append(
+        "deliveryPrice",
+        (formDataJson.deliveryPrice * 100).toString()
+      );
+      formData.append(
+        "estimatedDeliveryTime",
+        formDataJson.estimatedDeliveryTime.toString()
+      );
+      // Se añaden los elementos del menú y las cocinas.
+      formDataJson.cuisines.forEach((cuisine, index) => {
+        formData.append(`cuisines[${index}]`, cuisine);
+      });
+      formDataJson.menuItems.forEach((menuItem, index) => {
+        formData.append(`menuItems[${index}][name]`, menuItem.name);
+        formData.append(
+          `menuItems[${index}][price]`,
+          (menuItem.price * 100).toString()
+        );
+      });
+  
+      // Si se subió una imagen como archivo, se incluye.
+      if (formDataJson.imageFile) {
+        formData.append(`imageFile`, formDataJson.imageFile);
+      }
+      // Finalmente se llama a onSave() pasando formData.
+      onSave(formData);
+    };
+
     return (
       <Form {...form}>
       <form
-        // onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 bg-gray-50 p-10 rounded-lg"
       >
         <DetailsSection />
@@ -86,9 +128,9 @@ const formSchema = z
         <CuisinesSection />
         <Separator />
         <MenuSection />
-        {/* <Separator />
-        <ImageSection /> */}
-        {/* {isLoading ? <LoadingButton /> : <Button type="submit">Submit</Button>} */}
+        <Separator />
+        <ImageSection />
+        {isLoading ? <LoadingButton /> : <Button type="submit">Submit</Button>}
       </form>
     </Form>
 
