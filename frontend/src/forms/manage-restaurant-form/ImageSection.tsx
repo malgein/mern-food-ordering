@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 // Importa el componente de entrada de datos (input), estilizado, para subir archivos.
 import { Input } from "@/components/ui/input";
+import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 // Importa el hook que permite acceder al contexto del formulario de React Hook Form. Esto hace posible reutilizar los datos y controladores del formulario padre.
 import { useFormContext } from "react-hook-form";
 
@@ -46,14 +47,14 @@ const ImageSection = () => {
       <div className="flex flex-col gap-8 md:w-[50%]">
         {/* Si existingImageUrl tiene un valor (es decir, ya hay una imagen cargada), se muestra dentro de un contenedor con proporción 16:9.
         object-cover: ajusta la imagen para que llene el contenedor recortando lo que sobresalga.rounded-md: esquinas ligeramente redondeadas */}
-        {/* {existingImageUrl && (
+        {existingImageUrl && (
           <AspectRatio ratio={16 / 9}>
             <img
               src={existingImageUrl}
               className="rounded-md object-cover h-full w-full"
             />
           </AspectRatio>
-        )} */}
+        )}
         {/* Campo del formulario llamado imageFile, vinculado al control de React Hook Form. */}
         <FormField
           control={control}

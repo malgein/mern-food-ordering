@@ -34,6 +34,17 @@ router.post(
 );
 
 // ruta para acceder a un restaurante en especifico
+// que sera usada en la app para prepopulate  el formulario de un restaurante
 router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
+
+// Ruta para modificar la informacion de estaurante
+router.put(
+  "/",
+  upload.single("imageFile"),
+  validateMyRestaurantRequest,
+  jwtCheck,
+  jwtParse,
+  MyRestaurantController.updateMyRestaurant
+);
 
 export default router;

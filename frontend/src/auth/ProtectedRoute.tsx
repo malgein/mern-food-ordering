@@ -6,6 +6,7 @@ const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth0();
 
 //   Si no esta autenticado entonces retorna null
+// ? Parte del codigodonde podemos colocar un spiner para que se vea mientras carga la pagina 
   if (isLoading) {
     return null;
   }
@@ -14,7 +15,7 @@ const ProtectedRoute = () => {
   if (isAuthenticated) {
     return <Outlet />;
   }
-
+  // Si no esta autenticado el usuario simplemente retornara al homepage8
   return <Navigate to="/" replace />;
 };
 

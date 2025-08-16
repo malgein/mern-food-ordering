@@ -73,11 +73,52 @@ const createMyRestaurant = async (req: Request, res: Response) => {
     }
   };
   
+  // Este controlador sirve para editar un restaurante ya existente en la base de datos
+  const updateMyRestaurant = async (req: Request, res: Response) => {
+    try {
+      // Busca en la base de datos el restaurante asociado al usuario autenticado
+      const restaurant = await Restaurant.findOne({
+        user: req.userId,
+      });
+  
+      // Si no se encuentra un restaurante, devuelve un error 404
+      if (!restaurant) {
+        return res.status(404).json({ message: "restaurant not found" });
+      }
+  
+      // Actualiza los campos del restaurante con los datos enviados en el cuerpo de la petición
+      restaurant.restaurantName = req.body.restaurantName;
+      restaurant.city = req.body.city;
+      restaurant.country = req.body.country;
+      restaurant.deliveryPrice = req.body.deliveryPrice;
+      restaurant.estimatedDeliveryTime = req.body.estimatedDeliveryTime;
+      restaurant.cuisines = req.body.cuisines;
+      restaurant.menuItems = req.body.menuItems;
+      restaurant.lastUpdated = new Date(); // Marca la fecha/hora de última modificación
+  
+      // Si el usuario envió un archivo (nueva imagen), la sube y actualiza la URL de la imagen
+      if (req.file) {
+        const imageUrl = await uploadImage(req.file as Express.Multer.File);
+        restaurant.imageUrl = imageUrl;
+      }
+  
+      // Guarda los cambios en la base de datos
+      await restaurant.save();
+  
+      // Devuelve el restaurante actualizado con un estado 200
+      res.status(200).send(restaurant);
+    } catch (error) {
+      // Captura errores y devuelve un error 500 con un mensaje genérico
+      console.log("error", error);
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  };
+  
 
 	export default {
 		// updateOrderStatus,
 		// getMyRestaurantOrders,
 		getMyRestaurant,
 		createMyRestaurant,
-		// updateMyRestaurant,
+		updateMyRestaurant,
 	};
