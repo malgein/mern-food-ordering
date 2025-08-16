@@ -51,10 +51,33 @@ const createMyRestaurant = async (req: Request, res: Response) => {
     }
   };
 
+  const getMyRestaurant = async (req: Request, res: Response) => {
+    try {
+      // Busca un restaurante en la base de datos que esté asociado al usuario autenticado
+      // req.userId se asume que fue agregado por un middleware de autenticación previo
+      const restaurant = await Restaurant.findOne({ user: req.userId });
+  
+      // Si no se encuentra ningún restaurante para este usuario, se devuelve un error 404
+      if (!restaurant) {
+        return res.status(404).json({ message: "restaurant not found" });
+      }
+  
+      // Si se encuentra, se envía el objeto restaurante como respuesta en formato JSON
+      res.json(restaurant);
+    } catch (error) {
+      // Si ocurre un error inesperado, se registra en consola
+      // console.log("error", error);
+  
+      // Y se responde con un código 500 indicando error interno del servidor
+      res.status(500).json({ message: "Error fetching restaurant" });
+    }
+  };
+  
+
 	export default {
 		// updateOrderStatus,
 		// getMyRestaurantOrders,
-		// getMyRestaurant,
+		getMyRestaurant,
 		createMyRestaurant,
 		// updateMyRestaurant,
 	};

@@ -15,6 +15,7 @@ import MenuSection from "./MenuSection";
 
 import ImageSection from "./ImageSection";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 // Este esquema asegura que:Algunos campos (nombre del restaurante, ciudad, país, etc.) sean requeridos.
 const formSchema = z
@@ -79,11 +80,43 @@ const formSchema = z
       },
     });
 
+    // useEffect para cargar los valores del restaurante en caso de edición
+    // se encarga de formatear precios al editar un restaurante existente.
+    useEffect(() => {
+      if (!restaurant) {
+        return;
+      }
+  
+      // price lowest domination of 100 = 100pence == 1GBP
+      // Convierte deliveryPrice de peniques a libras (100 peniques = £1)
+      const deliveryPriceFormatted = parseInt(
+        (restaurant.deliveryPrice / 100).toFixed(2)
+      );
+  
+          // Convierte cada precio de los items del menú a libras
+      const menuItemsFormatted = restaurant.menuItems.map((item) => ({
+        ...item,
+        price: parseInt((item.price / 100).toFixed(2)),
+      }));
+  
+
+    // Construye un objeto actualizado con los valores formateados
+      const updatedRestaurant = {
+        ...restaurant,
+        deliveryPrice: deliveryPriceFormatted,
+        menuItems: menuItemsFormatted,
+      };
+  
+      // Reset del formulario con los valores formateados
+      form.reset(updatedRestaurant);
+    }, [form, restaurant]);
+
     // funcion que envia la informacion registrada en el formulario
     const onSubmit = (formDataJson: RestaurantFormData) => {
       // Se crea un objeto FormData, útil para enviar datos con archivos.
       const formData = new FormData();
   
+          // Se agregan todos los campos al objeto FormData (para envío multipart)
       formData.append("restaurantName", formDataJson.restaurantName);
       formData.append("city", formDataJson.city);
       formData.append("country", formDataJson.country);
@@ -101,6 +134,7 @@ const formSchema = z
       formDataJson.cuisines.forEach((cuisine, index) => {
         formData.append(`cuisines[${index}]`, cuisine);
       });
+       // Agregar los ítems del menú con nombre y precio convertido
       formDataJson.menuItems.forEach((menuItem, index) => {
         formData.append(`menuItems[${index}][name]`, menuItem.name);
         formData.append(

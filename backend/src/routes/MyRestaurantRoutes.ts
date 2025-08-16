@@ -33,4 +33,7 @@ router.post(
   MyRestaurantController.createMyRestaurant
 );
 
+// ruta para acceder a un restaurante en especifico
+router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
+
 export default router;

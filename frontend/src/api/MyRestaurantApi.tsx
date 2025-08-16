@@ -18,7 +18,7 @@ export const useGetMyRestaurant = () => {
   const getMyRestaurantRequest = async (): Promise<Restaurant> => {
     // Obtener token de acceso
     const accessToken = await getAccessTokenSilently();
-		console.log("Fetching restaurant with token", accessToken);
+		// console.log("Fetching restaurant with token", accessToken);
     // Realizar fetch a la ruta protegida
     const response = await fetch(`${API_BASE_URL}/api/my/restaurant`, {
       method: "GET",
