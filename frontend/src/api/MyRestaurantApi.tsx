@@ -101,47 +101,56 @@ export const useCreateMyRestaurant = () => {
  * Hook para actualizar (PUT) los datos del restaurante.
  */
 export const useUpdateMyRestaurant = () => {
+  // Hook de Auth0 que permite obtener el token de acceso del usuario autenticado
   const { getAccessTokenSilently } = useAuth0();
 
-  // Función interna para petición PUT
+  // Función interna que hace la petición PUT al backend para actualizar un restaurante
   const updateRestaurantRequest = async (
     restaurantFormData: FormData
   ): Promise<Restaurant> => {
+    // Obtiene el token de acceso de forma silenciosa (sin redirigir al login)
     const accessToken = await getAccessTokenSilently();
 
+    // Llama al endpoint del backend enviando los datos en un FormData
     const response = await fetch(`${API_BASE_URL}/api/my/restaurant`, {
-      method: "PUT",
+      method: "PUT", // Método PUT porque es una actualización
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`, // Token en cabecera para autorización
       },
-      body: restaurantFormData,
+      body: restaurantFormData, // Datos enviados (ejemplo: nombre, imagen, etc.)
     });
 
+    // Si la respuesta no existe (ej. fallo en red o servidor), lanza un error
     if (!response) {
       throw new Error("Failed to update restaurant");
     }
 
+    // Devuelve los datos en formato JSON (el restaurante actualizado)
     return response.json();
   };
 
-  // useMutation para manejar la actualización
+  // useMutation de React Query para gestionar la actualización de datos
   const {
-    mutate: updateRestaurant,
-    isLoading,
-    error,
-    isSuccess,
+    mutate: updateRestaurant, // Función que dispara la mutación (la llamada PUT)
+    isLoading,                // Indica si la petición está en curso
+    error,                    // Captura errores de la mutación
+    isSuccess,                // Indica si la mutación fue exitosa
   } = useMutation(updateRestaurantRequest);
 
+  // Si la mutación fue exitosa, se muestra un mensaje de éxito al usuario
   if (isSuccess) {
     toast.success("Restaurant Updated");
   }
 
+  // Si hubo un error en la mutación, se muestra un mensaje de error
   if (error) {
     toast.error("Unable to update restaurant");
   }
 
+  // Se devuelve la función updateRestaurant (para ser usada en el componente) y el estado de carga
   return { updateRestaurant, isLoading };
 };
+
 
 /**
  * Hook para obtener los pedidos del restaurante.

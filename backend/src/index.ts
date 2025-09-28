@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 // Importamos el sistema de rutas
 import myUserRoute from "./routes/MyUserRoutes";
 import myRestaurantRoute from "./routes/MyRestaurantRoutes"
+import restaurantRoute from "./routes/RestaurantRoute";
 // Dependencia para el almacenamiento de archivos tipo imagenes
 import { v2 as cloudinary } from "cloudinary";
 
@@ -37,6 +38,8 @@ app.use("/api/my/user", myUserRoute);
 // Ruta del servidor que lleva a cabo acciones en relacion con los restaurantes 
 app.use("/api/my/restaurant", myRestaurantRoute);
 
+// Ruta del servidor que consiste en la busqueda de restaurante por id y pos busqueda por palabra clave
+app.use("/api/restaurant", restaurantRoute);
 
 // Prendemos el servidor como tal
 app.listen(7000, () => {
