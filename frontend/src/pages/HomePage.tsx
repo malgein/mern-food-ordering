@@ -1,9 +1,16 @@
-import React from 'react'
 import landingImage from "../assets/landing.png"
 import appDownloadImage from "../assets/appDownload.png"
-
+import SearchBar, { SearchForm } from "@/components/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (searchFormValues: SearchForm) => {
+    navigate({
+      pathname: `/search/${searchFormValues.searchQuery}`,
+    });
+  };
 
   return (
 		<div className="flex flex-col gap-12">
@@ -14,6 +21,10 @@ const HomePage = () => {
 					</h1>
 					<span className="text-xl">Food is just a click away!</span>
 					{/* Justo aqui va el input par buscar por palabra clave */}
+          <SearchBar
+          placeHolder="Search by City or Town"
+          onSubmit={handleSearchSubmit}
+        />
 			</div>
 			{/* parte del landing donde ilustra la aplicacion movil */}
 			<div className="grid md:grid-cols-2 gap-5">

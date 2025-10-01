@@ -57,6 +57,7 @@ export type User = {
     restaurantId: string;
   };
   
+  // 
   export type RestaurantSearchResponse = {
     data: Restaurant[];
     pagination: {
