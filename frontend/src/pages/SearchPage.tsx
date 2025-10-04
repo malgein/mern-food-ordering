@@ -1,6 +1,6 @@
 import { useSearchRestaurants } from "@/api/RestaurantApi"; // Hook para comunicarse con la API y obtener resultados de búsqueda
 // import CuisineFilter from "@/components/CuisineFilter"; // Componente para filtrar por tipo de cocina
-// import PaginationSelector from "@/components/PaginationSelector"; // Componente para paginación
+import PaginationSelector from "@/components/PaginationSelector"; // Componente para paginación
 import SearchBar, { SearchForm } from "@/components/SearchBar"; // Barra de búsqueda
 import SearchResultCard from "@/components/SearchResultCard"; // Tarjeta que muestra cada restaurante
 import SearchResultInfo from "@/components/SearchResultInfo"; // Muestra info general de los resultados (ej: "200 resultados en Miami")
@@ -108,6 +108,7 @@ const SearchPage = () => {
       {/* Contenido principal */}
       <div id="main-content" className="flex flex-col gap-5">
         {/* Barra de búsqueda */}
+        {/* Barra de busqueda por cuisine o nombre de restaurante una vez seleccionado un pais o ciudad */}
         <SearchBar
           searchQuery={searchState.searchQuery}
           onSubmit={setSearchQuery}
@@ -129,11 +130,11 @@ const SearchPage = () => {
           <SearchResultCard restaurant={restaurant} />
         ))}
         {/* Paginación */}
-        {/* <PaginationSelector
+        <PaginationSelector
           page={results.pagination.page}
           pages={results.pagination.pages}
           onPageChange={setPage}
-        /> */}
+        />
       </div>
     </div>
   );
