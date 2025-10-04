@@ -2,8 +2,8 @@ import { useSearchRestaurants } from "@/api/RestaurantApi"; // Hook para comunic
 // import CuisineFilter from "@/components/CuisineFilter"; // Componente para filtrar por tipo de cocina
 // import PaginationSelector from "@/components/PaginationSelector"; // Componente para paginación
 import SearchBar, { SearchForm } from "@/components/SearchBar"; // Barra de búsqueda
-// import SearchResultCard from "@/components/SearchResultCard"; // Tarjeta que muestra cada restaurante
-// import SearchResultInfo from "@/components/SearchResultInfo"; // Muestra info general de los resultados (ej: "200 resultados en Miami")
+import SearchResultCard from "@/components/SearchResultCard"; // Tarjeta que muestra cada restaurante
+import SearchResultInfo from "@/components/SearchResultInfo"; // Muestra info general de los resultados (ej: "200 resultados en Miami")
 // import SortOptionDropdown from "@/components/SortOptionDropdown"; // Selector para cambiar criterio de ordenamiento
 import { useState } from "react";
 import { useParams } from "react-router-dom"; // Para obtener la ciudad de la URL
@@ -32,6 +32,7 @@ const SearchPage = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   // Hook que obtiene los resultados desde la API
+  // extraemos results e isLoading de la api mientras le pasamos nuestro state y el city que se obtiene de params
   const { results, isLoading } = useSearchRestaurants(searchState, city);
 
   // Actualiza el criterio de ordenamiento y resetea la paginación
@@ -88,7 +89,9 @@ const SearchPage = () => {
     return <span>No results found</span>;
   }
 
+  // ? Los id estan con propositos de orientacion nada mas no con otros propositos como el de css
   return (
+    // Para pantallas mas pequenas se mostraran 2 columnas  la primera medira 250px de largo y la otra el resto
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
       {/* Sidebar con lista de filtros por cocina */}
       <div id="cuisines-list">
@@ -114,22 +117,17 @@ const SearchPage = () => {
 
         {/* Info de resultados + selector de orden */}
         <div className="flex justify-between flex-col gap-3 lg:flex-row">
-          {/* <SearchResultInfo total={results.pagination.total} city={city} />
-          <SortOptionDropdown
+          <SearchResultInfo total={results.pagination.total} city={city} />
+          {/* <SortOptionDropdown
             sortOption={searchState.sortOption}
             onChange={(value) => setSortOption(value)}
           /> */}
         </div>
 
         {/* Tarjetas con los restaurantes */}
-        {/* {results.data.map((restaurant) => (
+        {results.data.map((restaurant) => (
           <SearchResultCard restaurant={restaurant} />
-        ))} */}
-
-         {/* {results.data.map((restaurant) => (
-          console.log(restaurant)
-        ))} */}
-
+        ))}
         {/* Paginación */}
         {/* <PaginationSelector
           page={results.pagination.page}
