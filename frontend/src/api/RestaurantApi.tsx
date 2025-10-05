@@ -69,7 +69,7 @@ searchState: SearchState,  // estado de búsqueda (texto, página, filtros)
     createSearchRequest,
     { enabled: !!city }                 // solo se ejecuta si se proporciona una ciudad
   );
-
+  // console.log(results)
   return {
     results,   // resultados con data y paginación
     isLoading, // estado de carga para mostrar spinners, etc.

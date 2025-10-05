@@ -1,10 +1,10 @@
 import { useSearchRestaurants } from "@/api/RestaurantApi"; // Hook para comunicarse con la API y obtener resultados de búsqueda
-// import CuisineFilter from "@/components/CuisineFilter"; // Componente para filtrar por tipo de cocina
+import CuisineFilter from "@/components/CuisineFilter"; // Componente para filtrar por tipo de cocina
 import PaginationSelector from "@/components/PaginationSelector"; // Componente para paginación
 import SearchBar, { SearchForm } from "@/components/SearchBar"; // Barra de búsqueda
 import SearchResultCard from "@/components/SearchResultCard"; // Tarjeta que muestra cada restaurante
 import SearchResultInfo from "@/components/SearchResultInfo"; // Muestra info general de los resultados (ej: "200 resultados en Miami")
-// import SortOptionDropdown from "@/components/SortOptionDropdown"; // Selector para cambiar criterio de ordenamiento
+import SortOptionDropdown from "@/components/SortOptionDropdown"; // Selector para cambiar criterio de ordenamiento
 import { useState } from "react";
 import { useParams } from "react-router-dom"; // Para obtener la ciudad de la URL
 
@@ -95,14 +95,14 @@ const SearchPage = () => {
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
       {/* Sidebar con lista de filtros por cocina */}
       <div id="cuisines-list">
-        {/* <CuisineFilter
+        <CuisineFilter
           selectedCuisines={searchState.selectedCuisines}
           onChange={setSelectedCuisines}
           isExpanded={isExpanded}
           onExpandedClick={() =>
             setIsExpanded((prevIsExpanded) => !prevIsExpanded)
           }
-        /> */}
+        />
       </div>
 
       {/* Contenido principal */}
@@ -119,10 +119,10 @@ const SearchPage = () => {
         {/* Info de resultados + selector de orden */}
         <div className="flex justify-between flex-col gap-3 lg:flex-row">
           <SearchResultInfo total={results.pagination.total} city={city} />
-          {/* <SortOptionDropdown
+          <SortOptionDropdown
             sortOption={searchState.sortOption}
             onChange={(value) => setSortOption(value)}
-          /> */}
+          />
         </div>
 
         {/* Tarjetas con los restaurantes */}
